@@ -10,7 +10,7 @@ export default function RootLayout({
       <div className="bg-amber-600">
         <h1>hero root layout------</h1>
         <Header />
-        {children}
+        {children} {/* 这里实际是 template.tsx */}
       </div>
     </>
   );
