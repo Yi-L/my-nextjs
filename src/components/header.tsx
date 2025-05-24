@@ -14,6 +14,10 @@ const router = [
     name: 'userDetail',
     path: '/user/userDetail',
   },
+  {
+    name: 'blog',
+    path: '/blog/1',
+  },
 ];
 export default function Header() {
   const pathname = usePathname();

@@ -19,14 +19,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  slotRoute,
 }: Readonly<{
   children: React.ReactNode;
+  slotRoute: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* <h1>root layout</h1> */}
-        {children}
+        <div>{children}</div>
+        <div>{slotRoute}</div>
       </body>
     </html>
   );
