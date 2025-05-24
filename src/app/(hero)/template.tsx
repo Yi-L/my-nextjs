@@ -5,7 +5,7 @@ export default function Template({
 }>) {
   return (
     <div>
-      <h3>Hello hero root Template--</h3>
+      <h3>Hello [hero] root Template--</h3>
       {children}
     </div>
   );

@@ -1,13 +1,15 @@
 'use client';
-import React, { useState, useReducer, useEffect, useRef } from 'react';
+import React, { useState, useReducer, useEffect, useRef, useMemo, useCallback } from 'react';
 
 // 父级state发生变化不会重新渲染
-const Child = React.memo(() => {
+const Child = React.memo(({ childCallback }: { childCallback: () => void }) => {
   console.log('child');
-  return <div>child</div>;
+  return <div onClick={childCallback}>child</div>;
 });
 Child.displayName = 'Child';
-export default function Home() {
+
+// export default function Home() {...} 两种都行
+const Home: React.FC = () => {
   const id = 'iddd';
   const cls = 'aa bn ccc';
   const style = {
@@ -63,13 +65,28 @@ export default function Home() {
   useEffect(() => {
     console.log(domRef.current);
   }, []);
+  // 类似于vue的 computed
+  const computedNum = useMemo(() => {
+    console.log('computedNum');
+    return num + 100;
+  }, [num]);
 
+  // useCallback 缓存函数
+  const [input, setInput] = useState('');
+  const changeVal = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  }, []);
+  // 即使使用 React.memo ，传入函数后后子组件依旧重新渲染，useCallback缓存函数后 引用地址不发生变化，子组件不会重新渲染
+  const childCallback = useCallback(() => {
+    console.log('child useCallback');
+  }, []);
   return (
     <>
       <div ref={domRef}>-----------useState-----------</div>
       <h1 style={style} id={id} className={`${cls} cursor-pointer`} onClick={fn('32132AA1')}>
         {num.toFixed(2)}
       </h1>
+      <div> computedNum: {computedNum}</div>
       <div>{str}</div>
       <div>{arr}</div>
       <div>{obj.name}</div>
@@ -78,10 +95,87 @@ export default function Home() {
       <button onClick={rFn}>change</button>
       <div>name: {data.name}</div>
       <div>name: {data.age}</div>
-      {num > 0 && <Child />}
+      <input className="bg-amber-100" type="text" value={input} onChange={changeVal} />
+      {num > 0 && <Child childCallback={childCallback} />}
     </>
   );
-}
+};
+export default Home;
+// export default function Home() {
+//   const id = 'iddd';
+//   const cls = 'aa bn ccc';
+//   const style = {
+//     color: '#fff',
+//   };
+//   const [num, setNum] = useState(0);
+//   const [arr, setArr] = useState([1, 2, 3]);
+//   const [str, setStr] = useState('test');
+//   const [obj, setObj] = useState(() => {
+//     return {
+//       name: 'name',
+//       age: 18,
+//     };
+//   });
+//   const r_obj = {
+//     name: 'name',
+//     age: 18,
+//   };
+//   type RObj = typeof r_obj;
+//   const reducer = (state: RObj, action: { name: string; id: number }) => {
+//     state = {
+//       ...state,
+//       name: action.name + action.id,
+//     };
+//     return state;
+//   };
+//   const initVal = () => {
+//     return {
+//       name: 'name111',
+//       age: 18,
+//     };
+//   };
+//   const [data, setData] = useReducer(reducer, r_obj, initVal);
+//   const fn = <T,>(_num: T) =>
+//     function () {
+//       console.log(_num);
+//       setStr('test2');
+//       const newArr = arr.reverse();
+//       setArr(newArr);
+//       setObj({ ...obj, name: 'name2' });
+//       setNum((prev) => prev + 1);
+//       setNum((prev) => prev + 1);
+//     };
+//   const rFn = () => {
+//     setData({ name: 'zhang', id: 123 });
+//   };
+//   // useEffect
+//   // 第二个参数 [num,data,obj] 改变时，会重新执行 useEffect, 支持多个值, 像 watch
+//   // 空数组是 moonted  生命周期
+//   // 可变种多个生命周期
+//   const domRef = useRef<HTMLDivElement | null>(null); // ✅ Moved to top level
+
+//   useEffect(() => {
+//     console.log(domRef.current);
+//   }, []);
+
+//   return (
+//     <>
+//       <div ref={domRef}>-----------useState-----------</div>
+//       <h1 style={style} id={id} className={`${cls} cursor-pointer`} onClick={fn('32132AA1')}>
+//         {num.toFixed(2)}
+//       </h1>
+//       <div>{str}</div>
+//       <div>{arr}</div>
+//       <div>{obj.name}</div>
+//       <div>{obj.age}</div>
+//       <div>-----------useReducer-----------</div>
+//       <button onClick={rFn}>change</button>
+//       <div>name: {data.name}</div>
+//       <div>name: {data.age}</div>
+//       {num > 0 && <Child />}
+//     </>
+//   );
+// }
 
 // import Image from 'next/image';
 

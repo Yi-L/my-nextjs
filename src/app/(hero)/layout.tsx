@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <>
       <div className="bg-amber-600">
-        <h1>hero root layout</h1>
+        <h1>hero root layout------</h1>
         <Header />
         {children}
       </div>
