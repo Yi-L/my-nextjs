@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useReducer, useEffect, useRef, useMemo, useCallback } from 'react';
+import { Button } from "@/components/ui/button"
 
 // 父级state发生变化不会重新渲染
 const Child = React.memo(({ childCallback }: { childCallback: () => void }) => {
@@ -82,6 +83,7 @@ const Home: React.FC = () => {
   }, []);
   return (
     <>
+      <Button>Click me</Button>
       <div ref={domRef}>-----------useState-----------</div>
       <h1 style={style} id={id} className={`${cls} cursor-pointer`} onClick={fn('32132AA1')}>
         {num.toFixed(2)}
